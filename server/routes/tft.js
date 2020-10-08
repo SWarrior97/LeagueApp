@@ -9,6 +9,18 @@ const traits = JSON.parse(fs.readFileSync('./data/traits.json', 'utf-8'));
 
 //champions
 
+router.get('/champion/:name',async (req,res) =>{
+	try{
+        const nameCapitalized = req.params.name.charAt(0).toUpperCase() + req.params.name.slice(1)
+
+        let url = '/img/tft/champions/TFT4_'+nameCapitalized+'.png';
+        
+        res.redirect(url)
+	}catch(err){
+		console.log(err)
+	}
+})
+
 // @desc   
 // @route   GET /
 router.get('/',async (req,res) =>{
@@ -111,6 +123,72 @@ router.get('/getChampByTrait/:trait',async (req,res) =>{
 })
 
 //itens
+
+router.get('/item/name/:name',async (req,res) =>{
+	try{
+        let id = -1;
+
+        items.forEach(function(item){
+           if(item.name.toLowerCase().includes(req.params.name.toLowerCase())){
+                id = item.id;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+           }
+        });
+
+        
+
+        if(id != -1){
+            let idStr = ''+id;
+            if(id.toString().length == 1){
+                idStr = '0'+id;
+            }
+
+            let url = '/img/tft/items/'+idStr+'.png';
+        
+            res.redirect(url)
+        }else{
+            res.status(404)
+        }
+        
+	}catch(err){
+		console.log(err)
+	}
+})
+
+router.get('/item/:id',async (req,res) =>{
+	try{
+        let id = req.params.id
+        let compareId = -1
+
+        items.forEach(function(item){
+            if(item.id == id){
+                compareId = id
+            }
+        });
+
+        if(id < 1){
+            res.status(404)
+        }else{
+            if(compareId < 1){
+                res.status(404)
+            }else{
+                let idStr = compareId.toString()
+
+                if(idStr.length == 1){
+                    idStr = '0'+idStr
+                }
+
+                let url = '/img/tft/items/'+idStr+'.png';
+        
+                res.redirect(url)
+            }
+        }
+
+        
+	}catch(err){
+		console.log(err)
+	}
+})
+
 // @desc   
 // @route   GET /
 router.get('/items',async (req,res) =>{
@@ -159,6 +237,19 @@ router.get('/items/:id',async (req,res) =>{
 })
 
 //traits
+
+router.get('/trait/:name',async (req,res) =>{
+	try{
+        
+
+        let url = '/img/tft/traits/'+req.params.name.toLowerCase()+'.png';
+        
+        res.redirect(url)
+	}catch(err){
+		console.log(err)
+	}
+})
+
 router.get('/trait',async (req,res) =>{
 	try{
         let traitsArray = [];
