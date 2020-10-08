@@ -7,6 +7,7 @@ const champs = JSON.parse(fs.readFileSync('./data/champions.json', 'utf-8'));
 const items = JSON.parse(fs.readFileSync('./data/items.json', 'utf-8'));
 const traits = JSON.parse(fs.readFileSync('./data/traits.json', 'utf-8'));
 
+//champions
 
 // @desc   
 // @route   GET /
@@ -104,6 +105,109 @@ router.get('/getChampByTrait/:trait',async (req,res) =>{
             }
         }
         res.json(returnChamps);
+	}catch(err){
+		console.log(err)
+	}
+})
+
+//itens
+// @desc   
+// @route   GET /
+router.get('/items',async (req,res) =>{
+	try{
+        let itensArray = [];
+
+        items.forEach(function(item){
+            itensArray.push({id:item.id,name:item.name,description:item.description})
+        });
+
+        res.json(itensArray);
+	}catch(err){
+		console.log(err)
+	}
+})
+
+router.get('/items/name/:name',async (req,res) =>{
+	try{
+        let itensArray = [];
+
+        items.forEach(function(item){
+            if(item.name.toLowerCase().includes(req.params.name.toLowerCase())){
+                itensArray.push({id:item.id,name:item.name,description:item.description})
+            }
+        });
+
+        res.json(itensArray);
+	}catch(err){
+		console.log(err)
+	}
+})
+router.get('/items/:id',async (req,res) =>{
+	try{
+        let itensArray = [];
+
+        items.forEach(function(item){
+            if(item.id == req.params.id){
+                itensArray.push({id:item.id,name:item.name,description:item.description})
+            }
+        });
+
+        res.json(itensArray);
+	}catch(err){
+		console.log(err)
+	}
+})
+
+//traits
+router.get('/trait',async (req,res) =>{
+	try{
+        let traitsArray = [];
+
+        traits.forEach(function(trait){
+            let sets = [];
+
+            trait.sets.forEach(function(set){
+                if(set.max != "undefined"){
+                    sets.push({style:set.style,min:set.min,max:set.max});
+                }else{
+                    sets.push({style:set.style,min:set.min});
+                }
+                
+            });
+            
+            traitsArray.push({name:trait.name,description:trait.description,sets:sets})
+            sets = [];
+        });
+
+        res.json(traitsArray);
+	}catch(err){
+		console.log(err)
+	}
+})
+
+router.get('/trait/:name',async (req,res) =>{
+	try{
+        let traitsArray = [];
+
+        traits.forEach(function(trait){
+            if(trait.name.toLowerCase().includes(req.params.name.toLowerCase())){
+                let sets = [];
+
+                trait.sets.forEach(function(set){
+                    if(set.max != "undefined"){
+                        sets.push({style:set.style,min:set.min,max:set.max});
+                    }else{
+                        sets.push({style:set.style,min:set.min});
+                    }
+                    
+                });
+                
+                traitsArray.push({name:trait.name,description:trait.description,sets:sets})
+                sets = [];
+            }
+        });
+
+        res.json(traitsArray);
 	}catch(err){
 		console.log(err)
 	}
